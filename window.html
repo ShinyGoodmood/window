@@ -6,15 +6,15 @@
     <title>Webcore Window</title>
 
     <style>
-        /* VARIABLES & RESET  */
+        /* VARIABLES */
         :root {
             --border-light: #c9c9ff;
-            --border-dark: #3b3b6d;
-            --bg-window: #f6f2ff;
-            --bg-header: #b9b5ff;
-            --bg-content: #efeaff;
-            --text: #2a2a4a;
-            --accent: #7b78ff;
+            --border-dark: #757575;
+            --bg-window: #ffffff;
+            --bg-header: #ffffff;
+            --bg-content: #ffffff;
+            --text: #000000;
+            --accent: #000000;
             --font: "Courier New", monospace;
         }
 
@@ -34,14 +34,12 @@
             color: var(--text);
         }
 
-
         /* MAIN WINDOW */
         section.window {
-            width: 60%;
-            max-width: 900px;
-            aspect-ratio: 4 / 3;
+            width: 40%;
+            height: 60vh;
+            padding: 8px;
             background: var(--bg-window);
-            border: 3px solid var(--border-dark);
             box-shadow:
                 inset 2px 2px 0 var(--border-light),
                 inset -2px -2px 0 var(--border-dark);
@@ -53,10 +51,13 @@
         /* HEADER */
         .window-header {
             background: var(--bg-header);
-            padding: 6px 10px;
+            padding: 5px 10px;
             font-size: 0.9rem;
-            border-bottom: 2px solid var(--border-dark);
-            box-shadow: inset 1px 1px 0 var(--border-light);
+            border-bottom: 1px solid var(--border-dark);
+            box-shadow:
+                inset 1px 1px 0 var(--border-light),
+                inset -1px -1px 0 var(--border-dark);
+            width: 100%;
         }
 
         /* CONTENT */
@@ -65,45 +66,16 @@
             display: flex;
             padding: 10px;
             gap: 10px;
-        }
-
-        /* Webcam area */
-        .webcam {
-            flex: 1;
-            background: var(--bg-content);
-            border: 2px solid var(--border-dark);
-            box-shadow:
-                inset 2px 2px 0 var(--border-light),
-                inset -2px -2px 0 var(--border-dark);
-            overflow: hidden;
-            /* no scroll */
-            display: flex;
             align-items: center;
-            justify-content: center;
         }
-
-        .webcam img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            /* no overflow */
-        }
-
-
-        /* TEXT CONTENT */
-        .text-content {
-            padding: 10px;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            white-space: pre-wrap;
-        }
-
 
         /* ICONS */
         .icons {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            height: 100%;
+            justify-content: center;
         }
 
         .icon {
@@ -114,18 +86,67 @@
             color: #fff;
         }
 
-        .icon span {
+        .icon-title {
             display: block;
             margin-top: 4px;
+            color: var(--text);
         }
 
         .icon-box {
             background: var(--accent);
             padding: 10px;
-            border: 2px solid var(--border-dark);
-            box-shadow: inset 1px 1px 0 var(--border-light);
+
+            box-shadow:
+                inset 2px 2px 0 var(--border-light),
+                inset -2px -2px 0 var(--border-dark);
         }
 
+        /* Webcam area */
+        .webcam {
+            position: absolute;
+            left: 50%;
+            top: 55%;
+            transform: translate(-55%, -55%);
+            flex: 0 0 auto;
+            width: 60%;
+            height: 70%;
+            padding: 5px;
+            box-sizing: border-box;
+            background: var(--bg-content);
+            box-shadow:
+                inset 1px 1px 0 var(--border-light),
+                inset -1px -1px 0 var(--border-dark);
+            overflow: hidden;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            max-width: calc(100% - 20px);
+            max-height: calc(100% - 20px);
+        }
+
+        .webcam img {
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            flex: 1 1 auto;
+            min-height: 0;
+            max-width: 100%;
+            object-fit: cover;
+            object-position: center center;
+            image-rendering: auto;
+
+            margin-top: 5px;
+        }
+
+        /* TEXT CONTENT */
+        .text-content {
+            padding: 10px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
 
         /* POPUP WINDOW */
         .popup {
@@ -134,7 +155,7 @@
             right: 10%;
             width: 35%;
             background: var(--bg-window);
-            border: 3px solid var(--border-dark);
+
             box-shadow:
                 inset 2px 2px 0 var(--border-light),
                 inset -2px -2px 0 var(--border-dark);
@@ -146,7 +167,7 @@
             background: var(--bg-header);
             padding: 5px 8px;
             font-size: 0.8rem;
-            border-bottom: 2px solid var(--border-dark);
+            border-bottom: 1px solid var(--border-dark);
             display: flex;
             justify-content: space-between;
         }
@@ -164,7 +185,7 @@
         @media (max-width: 800px) {
             section.window {
                 width: 90%;
-                aspect-ratio: auto;
+                height: auto;
             }
 
             .window-body {
@@ -184,29 +205,28 @@
     <section class="window">
         <div class="window-header">Desktop</div>
 
+        <!-- Icons -->
+        <div class="icons">
+            <div class="icon" onclick="showWebcam()">
+                <div class="icon-box">▶</div>
+                <span class="icon-title">Webcam</span>
+            </div>
+
+            <div class="icon" onclick="showInfo()">
+                <div class="icon-box">TXT</div>
+                <span class="icon-title">info.txt</span>
+            </div>
+
+            <div class="icon" onclick="togglePopup()">
+                <div class="icon-box">EXE</div>
+                <span class="icon-title">Design</span>
+            </div>
+        </div>
+
         <div class="window-body">
             <!-- Webcam / Main content -->
             <div class="webcam" id="mainContent">
                 <div class="window-header">Webcam</div>
-                <img src="https://via.placeholder.com/600x400.png?text=Webcam+Image" alt="webcam">
-            </div>
-
-            <!-- Icons -->
-            <div class="icons">
-                <div class="icon" onclick="showWebcam()">
-                    <div class="icon-box">▶</div>
-                    <span>Haishin</span>
-                </div>
-
-                <div class="icon" onclick="showInfo()">
-                    <div class="icon-box">TXT</div>
-                    <span>info.txt</span>
-                </div>
-
-                <div class="icon" onclick="togglePopup()">
-                    <div class="icon-box">EXE</div>
-                    <span>Design</span>
-                </div>
             </div>
         </div>
 
@@ -229,30 +249,35 @@
         function showWebcam() {
             const main = document.getElementById("mainContent");
             main.innerHTML = `
-    <img src="https://via.placeholder.com/600x400.png?text=Webcam+Image" alt="webcam">
-  `;
+                <div class="window-header">Webcam</div>
+                <img src="https://media.discordapp.net/attachments/1282588500264357919/1458154413846696089/Shiny_yipee.png?ex=6961e75f&is=696095df&hm=4b7b20cbd3c60cf6d4583809bd0b016602bb94dbe3cf705b4264a82f572c3ab2&=&format=webp&quality=lossless&width=1430&height=953"
+                alt="webcam">
+            `;
         }
 
         function showInfo() {
             const main = document.getElementById("mainContent");
             main.innerHTML = `
-    <div class="text-content">
-Say something about the char i guess?
-this works like a notepad file.
-it scrolls if needed.
+                <div class="window-header">Webcam</div>
+                <div class="text-content">
+                    Say something about the char i guess?
+                    this works like a notepad file.
+                    it scrolls if needed.
 
-----------------------
-Cute, pastel, chaotic
-Webcore idol energy
-----------------------
-    </div>
-  `;
+                    ----------------------
+                    Cute, pastel, chaotic
+                    Webcore idol energy
+                    ----------------------
+                </div>
+            `;
         }
 
         function togglePopup() {
             const popup = document.getElementById("popup");
             popup.style.display = popup.style.display === "block" ? "none" : "block";
         }
+
+        document.addEventListener("DOMContentLoaded", showWebcam);
     </script>
 
 </body>
