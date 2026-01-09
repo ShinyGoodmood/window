@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Webcore Window</title>
+
+    <style>
+        /* VARIABLES & RESET  */
+        :root {
+            --border-light: #c9c9ff;
+            --border-dark: #3b3b6d;
+            --bg-window: #f6f2ff;
+            --bg-header: #b9b5ff;
+            --bg-content: #efeaff;
+            --text: #2a2a4a;
+            --accent: #7b78ff;
+            --font: "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            /* background: #0e0e14; */
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font);
+            color: var(--text);
+        }
+
+
+        /* MAIN WINDOW */
+        section.window {
+            width: 60%;
+            max-width: 900px;
+            aspect-ratio: 4 / 3;
+            background: var(--bg-window);
+            border: 3px solid var(--border-dark);
+            box-shadow:
+                inset 2px 2px 0 var(--border-light),
+                inset -2px -2px 0 var(--border-dark);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .window-header {
+            background: var(--bg-header);
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            border-bottom: 2px solid var(--border-dark);
+            box-shadow: inset 1px 1px 0 var(--border-light);
+        }
+
+        /* CONTENT */
+        .window-body {
+            flex: 1;
+            display: flex;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        /* Webcam area */
+        .webcam {
+            flex: 1;
+            background: var(--bg-content);
+            border: 2px solid var(--border-dark);
+            box-shadow:
+                inset 2px 2px 0 var(--border-light),
+                inset -2px -2px 0 var(--border-dark);
+            overflow: hidden;
+            /* no scroll */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .webcam img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* no overflow */
+        }
+
+
+        /* TEXT CONTENT */
+        .text-content {
+            padding: 10px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+
+
+        /* ICONS */
+        .icons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 60px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.7rem;
+            color: #fff;
+        }
+
+        .icon span {
+            display: block;
+            margin-top: 4px;
+        }
+
+        .icon-box {
+            background: var(--accent);
+            padding: 10px;
+            border: 2px solid var(--border-dark);
+            box-shadow: inset 1px 1px 0 var(--border-light);
+        }
+
+
+        /* POPUP WINDOW */
+        .popup {
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 35%;
+            background: var(--bg-window);
+            border: 3px solid var(--border-dark);
+            box-shadow:
+                inset 2px 2px 0 var(--border-light),
+                inset -2px -2px 0 var(--border-dark);
+            display: none;
+            z-index: 10;
+        }
+
+        .popup-header {
+            background: var(--bg-header);
+            padding: 5px 8px;
+            font-size: 0.8rem;
+            border-bottom: 2px solid var(--border-dark);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .popup-body {
+            padding: 10px;
+            font-size: 0.8rem;
+        }
+
+        .close {
+            cursor: pointer;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 800px) {
+            section.window {
+                width: 90%;
+                aspect-ratio: auto;
+            }
+
+            .window-body {
+                flex-direction: column;
+            }
+
+            .popup {
+                width: 80%;
+                right: 10%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="window">
+        <div class="window-header">Desktop</div>
+
+        <div class="window-body">
+            <!-- Webcam / Main content -->
+            <div class="webcam" id="mainContent">
+                <div class="window-header">Webcam</div>
+                <img src="https://via.placeholder.com/600x400.png?text=Webcam+Image" alt="webcam">
+            </div>
+
+            <!-- Icons -->
+            <div class="icons">
+                <div class="icon" onclick="showWebcam()">
+                    <div class="icon-box">▶</div>
+                    <span>Haishin</span>
+                </div>
+
+                <div class="icon" onclick="showInfo()">
+                    <div class="icon-box">TXT</div>
+                    <span>info.txt</span>
+                </div>
+
+                <div class="icon" onclick="togglePopup()">
+                    <div class="icon-box">EXE</div>
+                    <span>Design</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popup -->
+        <div class="popup" id="popup">
+            <div class="popup-header">
+                <span>Desc.exe</span>
+                <span class="close" onclick="togglePopup()">✕</span>
+            </div>
+            <div class="popup-body">
+                anything about the char’s design
+                • pastel aesthetic
+                • webcore vibes
+                • old internet UI
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function showWebcam() {
+            const main = document.getElementById("mainContent");
+            main.innerHTML = `
+    <img src="https://via.placeholder.com/600x400.png?text=Webcam+Image" alt="webcam">
+  `;
+        }
+
+        function showInfo() {
+            const main = document.getElementById("mainContent");
+            main.innerHTML = `
+    <div class="text-content">
+Say something about the char i guess?
+this works like a notepad file.
+it scrolls if needed.
+
+----------------------
+Cute, pastel, chaotic
+Webcore idol energy
+----------------------
+    </div>
+  `;
+        }
+
+        function togglePopup() {
+            const popup = document.getElementById("popup");
+            popup.style.display = popup.style.display === "block" ? "none" : "block";
+        }
+    </script>
+
+</body>
+
+</html>
