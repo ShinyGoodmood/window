@@ -59,6 +59,7 @@
                 inset 1px 1px 0 var(--border-light),
                 inset -1px -1px 0 var(--border-dark);
             width: 100%;
+            cursor: move;
         }
 
         /* CONTENT */
@@ -182,6 +183,7 @@
             box-shadow:
                 inset 1px 1px 0 var(--border-light),
                 inset -1px -1px 0 var(--border-dark);
+            cursor: move;
         }
 
         .description-body {
@@ -444,27 +446,81 @@
             el.textContent = `${h}:${m}`;
         }
 
+        // Bouger les fenêtres Webcam et Description librement sur la fenêtre principale
+        function enableDragging() {
+            let dragging = null;
+            let offsetX = 0;
+            let offsetY = 0;
+            let parentRect = null;
+            let elemRect = null;
+
+            function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+            document.addEventListener('pointerdown', function (e) {
+                const header = e.target.closest('.window-header, .description-header');
+                if (!header) return;
+                const el = header.closest('.webcam, .description');
+                if (!el) return;
+
+                e.preventDefault();
+                dragging = el;
+
+                // compute parent (prefer the section.window) bounding to keep the element inside
+                const parent = el.closest('section.window') || el.parentElement;
+                parentRect = parent.getBoundingClientRect();
+                elemRect = el.getBoundingClientRect();
+
+                // switch to pixel left/top for dragging, remove transforms
+                const left = elemRect.left - parentRect.left;
+                const top = elemRect.top - parentRect.top;
+                el.style.left = left + 'px';
+                el.style.top = top + 'px';
+                el.style.transform = 'none';
+                el.style.position = 'absolute';
+                el.style.zIndex = 999;
+
+                offsetX = e.clientX - elemRect.left;
+                offsetY = e.clientY - elemRect.top;
+
+                document.addEventListener('pointermove', onPointerMove);
+                document.addEventListener('pointerup', onPointerUp, { once: true });
+            });
+
+            function onPointerMove(e) {
+                if (!dragging) return;
+                const el = dragging;
+                const rect = elemRect; // initial size
+                let x = e.clientX - parentRect.left - offsetX;
+                let y = e.clientY - parentRect.top - offsetY;
+
+                // clamp inside parent
+                x = clamp(x, 0, parentRect.width - rect.width);
+                y = clamp(y, 0, parentRect.height - rect.height);
+
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
+            }
+
+            function onPointerUp() {
+                if (!dragging) return;
+                dragging.style.zIndex = '';
+                dragging = null;
+                document.removeEventListener('pointermove', onPointerMove);
+            }
+        }
+
+        // Listeners et fonctions automatiques
+
         setInterval(updateClock, 1000);
 
         document.addEventListener("DOMContentLoaded", function () {
             closeBoth()
             updateClock();
+            enableDragging();
         });
+
     </script>
 
 </body>
 
 </html>
-
-
-<!-- TODO -->
-
-<!-- 
-
-- Changer l'affichage webcam et description description
-- Mettre webcam et description en display none au chargement (déjà fait pour la description)
-- Créer un tableau d'objets pour chaque OC (Img webcam, texte info etc) 
-    et une fonction pour changer d'OC (Changer updateWindows() en updateWindows(OC) 
-    pour afficher le bon oc en fonction de l'argument) 
-
--->
