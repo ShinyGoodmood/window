@@ -38,7 +38,6 @@
         section.window {
             width: 40%;
             height: 60vh;
-            padding: 8px;
             background: var(--bg-window);
             box-shadow:
                 inset 2px 2px 0 var(--border-light),
@@ -51,9 +50,11 @@
         /* HEADER */
         .window-header {
             background: var(--bg-header);
-            padding: 5px 10px;
-            font-size: 0.9rem;
+            padding: 5px 8px;
+            font-size: 0.8rem;
             border-bottom: 1px solid var(--border-dark);
+            display: flex;
+            justify-content: space-between;
             box-shadow:
                 inset 1px 1px 0 var(--border-light),
                 inset -1px -1px 0 var(--border-dark);
@@ -110,7 +111,6 @@
             flex: 0 0 auto;
             width: 400px;
             height: 250px;
-            padding: 5px;
             box-sizing: border-box;
             background: var(--bg-content);
             box-shadow:
@@ -126,18 +126,21 @@
             max-height: calc(100% - 20px);
         }
 
-        .webcam img {
+        .webcam-body {
+            padding: 1px;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .webcam-body img {
             display: block;
             box-sizing: border-box;
             width: 100%;
-            flex: 1 1 auto;
-            min-height: 0;
-            max-width: 100%;
+            height: 100%;
             object-fit: cover;
             object-position: center center;
             image-rendering: auto;
-
-            margin-top: 5px;
         }
 
         /* TEXT CONTENT */
@@ -152,32 +155,40 @@
         }
 
         /* POPUP WINDOW */
-        .popup {
+        .description {
             position: absolute;
-            top: 20%;
-            right: 10%;
-            width: 35%;
+            bottom: 15%;
+            right: 5%;
+            width: 400px;
+            height: 150px;
             background: var(--bg-window);
-
             box-shadow:
                 inset 2px 2px 0 var(--border-light),
                 inset -2px -2px 0 var(--border-dark);
-            display: none;
-            z-index: 10;
+            /* display: none; */
+            display: block;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .popup-header {
+        .description-header {
             background: var(--bg-header);
             padding: 5px 8px;
             font-size: 0.8rem;
             border-bottom: 1px solid var(--border-dark);
             display: flex;
             justify-content: space-between;
+            box-shadow:
+                inset 1px 1px 0 var(--border-light),
+                inset -1px -1px 0 var(--border-dark);
         }
 
-        .popup-body {
+        .description-body {
             padding: 10px;
             font-size: 0.8rem;
+            flex: 1 1 auto;
+            min-height: 0;
         }
 
         .close {
@@ -195,7 +206,7 @@
                 flex-direction: column;
             }
 
-            .popup {
+            .description {
                 width: 80%;
                 right: 10%;
             }
@@ -204,27 +215,27 @@
         /* TASKBAR */
         .taskbar {
             position: absolute;
-            left: 8px;
-            right: 8px;
-            bottom: 8px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
             height: 44px;
             background: #FFFFFF;
             color: var(--text);
             display: flex;
-            align-items: center;
+            justify-content: space-between;
             gap: 8px;
             padding: 6px 8px;
             box-shadow:
-                inset 1px 1px 0 var(--border-light),
-                inset -1px -1px 0 var(--border-dark);
+                inset 2px 2px 0 var(--border-light),
+                inset -2px -2px 0 var(--border-dark);
             z-index: 20;
             font-size: 0.8rem;
         }
 
         .taskbar-left,
-        .taskbar-middle,
         .taskbar-right {
             display: flex;
+            ;
             align-items: center;
             gap: 6px;
         }
@@ -304,92 +315,124 @@
 
         <!-- Icons -->
         <div class="icons">
-            <div class="icon" onclick="showWebcam()">
-                <div class="icon-box">▶</div>
-                <span class="icon-title">Webcam</span>
+            <div class="icon" onclick="updateWindows('shiny')">
+                <div class="icon-box">Shiny</div>
+                <span class="icon-title">Shiny.exe</span>
             </div>
 
-            <div class="icon" onclick="showInfo()">
-                <div class="icon-box">TXT</div>
-                <span class="icon-title">info.txt</span>
-            </div>
-
-            <div class="icon" onclick="togglePopup()">
-                <div class="icon-box">EXE</div>
-                <span class="icon-title">Design</span>
+            <div class="icon" onclick="updateWindows('rin')">
+                <div class="icon-box">Rin</div>
+                <span class="icon-title">Rin.exe</span>
             </div>
         </div>
 
         <div class="window-body">
             <!-- Webcam / Main content -->
             <div class="webcam" id="mainContent">
-                <div class="window-header" id="headerWebcamTitle">Webcam</div>
             </div>
         </div>
 
         <!-- Popup -->
-        <div class="popup" id="popup">
-            <div class="popup-header">
-                <span>Desc.exe</span>
-                <span class="close" onclick="togglePopup()">✕</span>
-            </div>
-            <div class="popup-body">
-                anything about the char’s design
-                • pastel aesthetic
-                • webcore vibes
-                • old internet UI
-            </div>
+        <div class="description" id="description">
         </div>
 
         <!-- Taskbar (bottom) -->
         <div class="taskbar" role="toolbar" aria-label="taskbar">
             <div class="taskbar-left">
-                <button class="start-btn" onclick="showWebcam()">START</button>
+                <button class="start-btn" onclick="closeBoth()">START</button>
             </div>
-
-            <div class="taskbar-middle">
-                <div class="task-btn active" onclick="showWebcam()">Webcam</div>
-                <div class="task-btn" onclick="showInfo()">Info</div>
-                <div class="task-btn" onclick="togglePopup()">Design</div>
-            </div>
-
             <div class="taskbar-right">
-                <div class="tray-item">💬</div>
                 <div class="tray-item" id="clock">--:--</div>
             </div>
         </div>
     </section>
 
     <script>
-        function showWebcam() {
-            const main = document.getElementById("mainContent");
-            main.innerHTML = `
-                <div class="window-header">Webcam</div>
-                <img src="https://media.discordapp.net/attachments/1282588500264357919/1458154413846696089/Shiny_yipee.png?ex=6961e75f&is=696095df&hm=4b7b20cbd3c60cf6d4583809bd0b016602bb94dbe3cf705b4264a82f572c3ab2&=&format=webp&quality=lossless&width=1430&height=953"
-                alt="webcam">
-            `;
+
+        // Class OC
+
+        class OC {
+            constructor(name, image, description) {
+                this.name = name;
+                this.image = image;
+                this.description = description;
+            }
         }
 
-        function showInfo() {
-            const main = document.getElementById("mainContent");
-            main.innerHTML = `
-                <div class="window-header">Info.txt</div>
-                <div class="text-content">
-                    Say something about the char i guess?
-                    this works like a notepad file.
-                    it scrolls if needed.
+        // Instances OC
 
-                    ----------------------
-                    Cute, pastel, chaotic
-                    Webcore idol energy
-                    ----------------------
+        let shiny = new OC(
+            "Shiny",
+            "https://media.discordapp.net/attachments/1282588500264357919/1458154413846696089/Shiny_yipee.png?ex=6961e75f&is=696095df&hm=4b7b20cbd3c60cf6d4583809bd0b016602bb94dbe3cf705b4264a82f572c3ab2&=&format=webp&quality=lossless&width=1430&height=953",
+            `Shiny is a cheerful and energetic, known for their vibrant personality and love for adventure. They have a knack for bringing joy to those around them and are always up for trying new things, with a heart full of kindness and a spirit that shines bright.`
+        );
+
+        let rin = new OC(
+            "Rin",
+            "https://media.discordapp.net/attachments/1380542314203578590/1380542446542258320/Thereishandseverywhere_v3.png?ex=6964fa58&is=6963a8d8&hm=f0ddc30af5b05ccb65a004290cdc9662d6646fb58f13437f351705eac3baff4b&=&format=webp&quality=lossless&width=881&height=881",
+            `emo girl.
+            Also cute`
+        );
+
+        const OC_MAP = {
+            shiny: shiny,
+            rin: rin
+        };
+
+        // Fonctions d'affichage des fenêtres avec les informations des OC
+
+        function updateWindows(oc) {
+            const main = document.getElementById("mainContent");
+            const description = document.getElementById("description");
+
+            // accept either an OC instance or a string key (case-insensitive)
+            let resolved = oc;
+            // if nothing is provided, stop
+            if (!resolved) return;
+            if (typeof resolved === 'string') {
+                const key = resolved.toLowerCase();
+                // stop if the provided name doesn't exist
+                if (!OC_MAP[key]) return;
+                resolved = OC_MAP[key];
+            }
+
+            main.style.display = "block";
+            description.style.display = "block";
+
+            main.innerHTML = `
+                <div class="window-header">
+                    <span>Webcam.exe</span>
+                    <span class="close" onclick="closeWebcam()">✕</span>
+                </div>
+                <div class="webcam-body">
+                    <img src="${resolved.image}" alt="webcam">
+                </div>
+            `;
+
+            description.innerHTML = `
+                <div class="description-header">
+                    <span>${resolved.name}.exe</span>
+                    <span class="close" onclick="closeDescription()">✕</span>
+                </div>
+                <div class="description-body">
+                    ${resolved.description}
                 </div>
             `;
         }
 
-        function togglePopup() {
-            const popup = document.getElementById("popup");
-            popup.style.display = popup.style.display === "block" ? "none" : "block";
+        function closeDescription() {
+            const description = document.getElementById("description");
+            description.style.display = "none";
+        }
+
+        function closeWebcam() {
+            const main = document.getElementById("mainContent");
+            main.style.display = "none";
+        }
+
+        function closeBoth() {
+            closeWebcam();
+            closeDescription();
         }
 
         function updateClock() {
@@ -404,7 +447,7 @@
         setInterval(updateClock, 1000);
 
         document.addEventListener("DOMContentLoaded", function () {
-            showWebcam();
+            closeBoth()
             updateClock();
         });
     </script>
@@ -418,10 +461,10 @@
 
 <!-- 
 
-- Changer l'affichage webcam et popup description
-- Mettre webcam et popup en display none au chargement (déjà fait pour la popup)
+- Changer l'affichage webcam et description description
+- Mettre webcam et description en display none au chargement (déjà fait pour la description)
 - Créer un tableau d'objets pour chaque OC (Img webcam, texte info etc) 
-    et une fonction pour changer d'OC (Changer showWebcam() en showWebcam(OC) 
+    et une fonction pour changer d'OC (Changer updateWindows() en updateWindows(OC) 
     pour afficher le bon oc en fonction de l'argument) 
 
 -->
