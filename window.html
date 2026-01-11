@@ -380,19 +380,20 @@
             rin: rin
         };
 
-        // Fonctions d'affichage des fenêtres avec les informations des OC
+        // Fonctions d'affichage et manipulation des fenêtres Webcam et description
 
+        // Ouvrir les fenêtres Webcam et Description avec les information d'un personnage spécifié en paramètre (oc)
         function updateWindows(oc) {
             const main = document.getElementById("mainContent");
             const description = document.getElementById("description");
 
-            // accept either an OC instance or a string key (case-insensitive)
+            // Permet les instances OC et les chaînes de caractère
             let resolved = oc;
-            // if nothing is provided, stop
+            // Stop si le paramètre est indéfini
             if (!resolved) return;
             if (typeof resolved === 'string') {
                 const key = resolved.toLowerCase();
-                // stop if the provided name doesn't exist
+                // Stop la fonction si le personnage n'est pas dans la liste d'objets
                 if (!OC_MAP[key]) return;
                 resolved = OC_MAP[key];
             }
@@ -421,21 +422,25 @@
             `;
         }
 
+        // Fonction pour fermer la fenêtre Webcam (bouton croix sur la fenpêtre correspondante)
+        function closeWebcam() {
+            const main = document.getElementById("mainContent");
+            main.style.display = "none";
+        }
+        
+        // Fonction pour fermer la fenêtre Description (bouton croix sur la fenpêtre correspondante)
         function closeDescription() {
             const description = document.getElementById("description");
             description.style.display = "none";
         }
 
-        function closeWebcam() {
-            const main = document.getElementById("mainContent");
-            main.style.display = "none";
-        }
-
+        // Fonction pour fermer les fenêtres Webcam et Description (bouton START)
         function closeBoth() {
             closeWebcam();
             closeDescription();
         }
 
+        // Fonction pour mettre à jour l'horloge
         function updateClock() {
             const el = document.getElementById('clock');
             if (!el) return;
@@ -445,7 +450,7 @@
             el.textContent = `${h}:${m}`;
         }
 
-        // Bouger les fenêtres Webcam et Description librement sur la fenêtre principale
+        // Fonction permettant le déplacement des fenêtres Webcam et Description librement sur la fenêtre principale
         function enableDragging() {
             let dragging = null;
             let offsetX = 0;
@@ -464,7 +469,7 @@
                 e.preventDefault();
                 dragging = el;
 
-                // compute parent (prefer the section.window) bounding to keep the element inside
+                // Récupère l'élément parent "Window" pour créer les limites de déplacement des fenêtres enfants
                 const parent = el.closest('section.window') || el.parentElement;
                 parentRect = parent.getBoundingClientRect();
                 elemRect = el.getBoundingClientRect();
